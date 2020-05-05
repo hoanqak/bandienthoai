@@ -8,7 +8,8 @@ import imgNew from './images/macbookpro.jpg';
 import dell from './images/dell.jpg';
 import acer from './images/acer.jpg';
 
-import img2 from './images/123.jpg';
+import config from './config/config'
+
 const Item = (props) =>{
     return <div className='item'>
         {props.itemName}
@@ -61,18 +62,21 @@ class Index  extends React.Component {
         // this.chooseOne = this.chooseOne.bind(this);
         // this.chooseTwo = this.chooseTwo.bind(this);
         // this.chooseThree = this.chooseThree.bind(this);
+        
 
         setInterval(()=>{
             let count = this.state.imageActivate;
-            if(count == 1){
+            if(count === 1){
                 this.setState({imageActivate: 2});
-            }else if(count == 2){
+            }else if(count === 2){
                 this.setState({imageActivate: 3});
-            }else if(count == 3){
+            }else if(count === 3){
                 this.setState({imageActivate: 1});
             }
             this.setDotActivate(count);
         }, 3000);
+
+        console.log(this.state.categories)
 
     }
 
@@ -129,14 +133,9 @@ class Index  extends React.Component {
             case 3:
                 this.chooseThree();
                 break;
+            default:
+                this.chooseOne();
         }
-    }
-
-    clickMe(){
-        this.setState({
-            img: logo
-        })
-        alert('hello' + this.state.img);
     }
 
     activate(){
@@ -152,22 +151,33 @@ class Index  extends React.Component {
     }
 
     componentDidMount(){
-        console.log('hihiihi')
-        fetch("http://localhost:8081/api/v1/haha").then(res => res.json()).then((result) => {
-            console.log('hhihihii');
-            console.log(result);
+        console.log(`${ config.BASE_URL }/api/v1/categories`);
+        fetch(`${ config.BASE_URL }/api/v1/categories`).then(res => res.json()).then((result) => {
+            this.setState({categories: result})
+        })
+
+        fetch(`${ config.BASE_URL }/api/v1/products`).then(res => res.json()).then((result) => {
+            this.setState({products : result})
         })
     }
     render(){
         let img = imgNew;
-        const numbers = [1,2,3,4,5,6,7];
-        let componentListProduct = numbers.map((c) =>
-            <ViewSample name='Macbook pro 2020' price='20.000.000' discount='15.000.000' discountPercent={c +'%'}></ViewSample>
-        );
-        const listCategories = ["Laptop theo thương hiệu",'Laptop theo nhu cầu','Laptop theo kích thước',
-        'Laptop theo giá','Laptop theo cấu hình chip','Phụ kiện laptop','Linh kiện laptop'];
-        const listCategoriesComponent = listCategories.map((category) => <Item itemName={category}/>)
+        // const numbers = [1,2,3,4,5,6,7];
+        // let componentListProduct = numbers.map((c) =>
+        //     <ViewSample name='Macbook pro 2020' price='20.000.000' discount='15.000.000' discountPercent={c +'%'}></ViewSample>
+        // );
 
+        let componentListProduct;
+        if(this.state.products != null){
+            componentListProduct = this.state.products.map((product) =>
+            <ViewSample name={product.productName} discount={product.price} price={product.price - ((product.discountPercent / 100) * product.price)} discountPercent={product.discountPercent +'%'}></ViewSample>
+            )
+        }
+    
+        var listCategoriesComponent;
+        if(this.state.categories != null) {
+            listCategoriesComponent = this.state.categories.map((cate) => <Item itemName={cate.categoryName}/>)
+        }
         return <div>
                     <Header/>
                     <div className='component'>
@@ -188,7 +198,7 @@ class Index  extends React.Component {
                                     <News image={acer}></News>
                                 </div>
                                 <div className='list-dot'>
-                                    <span className={this.state.dot1} onClick={() => this.componentDidMount()}></span>
+                                    <span className={this.state.dot1} onClick={() => this.chooseOne}></span>
                                     <span className={this.state.dot2} onClick={this.chooseTow}></span>
                                     <span className={this.state.dot3} onClick={this.chooseThree}></span>
                                 </div>
