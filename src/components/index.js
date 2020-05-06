@@ -33,8 +33,6 @@ const Header = () =>{
     </div>
 }
 
-const abc = 'hihihihi';
-
 const Footer = () =>{
     return <div>
 
@@ -58,12 +56,6 @@ class Index  extends React.Component {
             },
             imageActivate: 1
         };
-        // this.clickMe = this.clickMe.bind(this);
-        // this.chooseOne = this.chooseOne.bind(this);
-        // this.chooseTwo = this.chooseTwo.bind(this);
-        // this.chooseThree = this.chooseThree.bind(this);
-        
-
         setInterval(()=>{
             let count = this.state.imageActivate;
             if(count === 1){
@@ -151,22 +143,39 @@ class Index  extends React.Component {
     }
 
     componentDidMount(){
-        console.log(`${ config.BASE_URL }/api/v1/categories`);
         fetch(`${ config.BASE_URL }/api/v1/categories`).then(res => res.json()).then((result) => {
-            this.setState({categories: result})
-        })
+            this.setState({categories: result.data.categories})
+            })
 
         fetch(`${ config.BASE_URL }/api/v1/products`).then(res => res.json()).then((result) => {
-            this.setState({products : result})
+            console.log(result)
+            this.setState({products : result.data.products})
         })
     }
+
+    onSubmit = () =>{
+
+        let formData= new FormData();
+        console.log(document.forms["formFile"].file.files[0]);
+        formData.append("file", document.forms["formFile"].file.files[0]);
+        formData.append('categoryDto', new Blob([JSON.stringify({
+            "categoryName": document.getElementById("categoryName").value,
+        })]));
+
+        fetch(`${ config.BASE_URL }/admin/api/v1/test`, {
+            method: "POST",
+            headers:{
+                'Content-Type': 'multipart/form-data',
+                'Accept':'application/json'
+            },
+            body: formData
+        }).then(res => res.json()).then((result) => {
+            console.log(result)
+        });
+    }
+
     render(){
         let img = imgNew;
-        // const numbers = [1,2,3,4,5,6,7];
-        // let componentListProduct = numbers.map((c) =>
-        //     <ViewSample name='Macbook pro 2020' price='20.000.000' discount='15.000.000' discountPercent={c +'%'}></ViewSample>
-        // );
-
         let componentListProduct;
         if(this.state.products != null){
             componentListProduct = this.state.products.map((product) =>
@@ -179,6 +188,12 @@ class Index  extends React.Component {
             listCategoriesComponent = this.state.categories.map((cate) => <Item itemName={cate.categoryName}/>)
         }
         return <div>
+
+            <form name='formFile' method='POST' enctype="multipart/form-data">
+                <input type="file" name='file'></input>
+                <input type='text' id='categoryName'></input>
+                <input type="button" id="Submit" id="submit" onClick={this.onSubmit} />
+            </form>
                     <Header/>
                     <div className='component'>
                         <div className='content'>
@@ -191,14 +206,15 @@ class Index  extends React.Component {
                                 </div>
 
                                 <div className={this.state.news.img2}>
-                                    <News image={dell}></News>
+                                    {/* <News image={dell}></News> */}
+                                    <News image='‪C:\Users\HuyHoang\Downloads\123.jpg'></News>
                                 </div>
 
                                 <div className={this.state.news.img3}>
                                     <News image={acer}></News>
                                 </div>
                                 <div className='list-dot'>
-                                    <span className={this.state.dot1} onClick={() => this.chooseOne}></span>
+                                    <span className={this.state.dot1} onClick={this.getCategories}></span>
                                     <span className={this.state.dot2} onClick={this.chooseTow}></span>
                                     <span className={this.state.dot3} onClick={this.chooseThree}></span>
                                 </div>
