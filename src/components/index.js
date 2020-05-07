@@ -9,6 +9,7 @@ import dell from './images/dell.jpg';
 import acer from './images/acer.jpg';
 
 import config from './config/config'
+import Paging from './paging';
 
 const Item = (props) =>{
     return <div className='item'>
@@ -34,7 +35,7 @@ const Header = () =>{
 }
 
 const Footer = () =>{
-    return <div>
+    return <div className='footer'>
 
     </div>
 }
@@ -54,7 +55,8 @@ class Index  extends React.Component {
                 img2: 'img1',
                 img3: 'img2'
             },
-            imageActivate: 1
+            imageActivate: 1,
+            page: 1
         };
         setInterval(()=>{
             let count = this.state.imageActivate;
@@ -146,11 +148,7 @@ class Index  extends React.Component {
         fetch(`${ config.BASE_URL }/api/v1/categories`).then(res => res.json()).then((result) => {
             this.setState({categories: result.data.categories})
             })
-
-        fetch(`${ config.BASE_URL }/api/v1/products`).then(res => res.json()).then((result) => {
-            console.log(result)
-            this.setState({products : result.data.products})
-        })
+        this.loadDataProduct();
     }
 
     onSubmit = () =>{
@@ -174,26 +172,36 @@ class Index  extends React.Component {
         });
     }
 
+    loadDataProduct = async () =>{
+        alert(this.state.page)
+        fetch(`${ config.BASE_URL }/api/v1/products?page=${ this.state.page }`).then(res => res.json()).then((result) => {
+            this.setState({products : result.data.products, totalPage: result.data.totalPage})
+        })
+    }
+
+    callbackFunction = async (page) => {
+        this.setPage(page);
+        this.loadDataProduct();
+    }
+
+    setPage = (page) =>{
+        this.setState({ page: page })
+    }
+
     render(){
         let img = imgNew;
         let componentListProduct;
         if(this.state.products != null){
-            componentListProduct = this.state.products.map((product) =>
-            <ViewSample name={product.productName} discount={product.price} price={product.price - ((product.discountPercent / 100) * product.price)} discountPercent={product.discountPercent +'%'}></ViewSample>
+            componentListProduct = this.state.products.map((product, key) =>
+            <ViewSample name={product.productName} discount={product.price} key={key} price={product.price - ((product.discountPercent / 100) * product.price)} discountPercent={product.discountPercent +'%'}></ViewSample>
             )
         }
-    
-        var listCategoriesComponent;
-        if(this.state.categories != null) {
-            listCategoriesComponent = this.state.categories.map((cate) => <Item itemName={cate.categoryName}/>)
+        let listCategoriesComponent;
+        let { categories } = this.state;
+        if(categories != null) {
+            listCategoriesComponent = categories.map((cate, key) => <Item itemName={cate.categoryName} key={key}/>)
         }
         return <div>
-
-            <form name='formFile' method='POST' enctype="multipart/form-data">
-                <input type="file" name='file'></input>
-                <input type='text' id='categoryName'></input>
-                <input type="button" id="Submit" id="submit" onClick={this.onSubmit} />
-            </form>
                     <Header/>
                     <div className='component'>
                         <div className='content'>
@@ -204,12 +212,9 @@ class Index  extends React.Component {
                                 <div className={this.state.news.img1}>
                                     <News image={img}></News>
                                 </div>
-
                                 <div className={this.state.news.img2}>
-                                    {/* <News image={dell}></News> */}
-                                    <News image='‪C:\Users\HuyHoang\Downloads\123.jpg'></News>
+                                    <News image={dell}></News>
                                 </div>
-
                                 <div className={this.state.news.img3}>
                                     <News image={acer}></News>
                                 </div>
@@ -223,8 +228,9 @@ class Index  extends React.Component {
                         <div className='list-item'>
                             {componentListProduct}
                         </div>
-
+                        <Paging totalPage={this.state.totalPage} parentCallback={this.callbackFunction} pageActivate={this.state.page}></Paging>
                     </div>
+                    <Footer></Footer>
                 </div>
     }
 

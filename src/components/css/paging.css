@@ -1,0 +1,40 @@
+.list-paging{
+    display: flex;
+    justify-content: center;
+}
+
+.item-page{
+    display: flex;
+    min-width: 40px;
+    height: 25px;
+    border-radius: 5px;
+    background-color: #fff;
+    border: 1px solid lightgray;
+    margin: 2px;
+    box-shadow: 0px 0px 5px lightgrey;
+    color: darkgray;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 12px;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.page-activate{
+    background: #007ACC;
+    color: #fff;
+    /* pointer-events: none; */
+}
+
+.item-page:hover{
+    background-color: lightgray;
+    color: #fff
+}
+
+
+.paging-box{
+    display: flex;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+}
