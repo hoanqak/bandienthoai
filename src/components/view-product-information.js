@@ -40,9 +40,9 @@ class ViewProductInformation extends React.Component{
     render(){
         console.log('RD')
         let { productInformation } = this.state;
-
+        let { product }= this.state;
         let information = null;
-        if(this.state.product != null && this.state.productInformation != null){
+        if(product != null && productInformation != null){
             information = <div>
                 <div className='top'>
                     <div className='box-image-information'>
@@ -57,12 +57,15 @@ class ViewProductInformation extends React.Component{
                         </div>
                     </div>
                     <div className='box-product-information'>
-                        <div className='product-information-product-name'>
-                            {this.state.product.productName}
-                        </div>
-                        <div>
-                            Sort desctip
-                        </div>
+                        <div className='product-information-product-name'>{product.productName}</div>
+                        <div className='product-information-price'>{ product.price }</div>
+                        <div className='product-information-text-detail'>Sort desctip</div>
+                        <div className='product-information-text-detail'>CPU: { productInformation.cpu }</div>
+                        <div className='product-information-text-detail'>RAM: { productInformation.ram }</div>
+                        <div className='product-information-text-detail'>Display: {productInformation.display}</div>
+                        <div className='product-information-text-detail'>Card Graphic: { productInformation.graphic }</div>
+                        <div className='product-information-text-detail'>Operation System: { productInformation.operationSystem }</div>
+                        <div className='product-information-text-detail'>Storage: { productInformation.storage }</div>
                     </div>
                 </div>
             </div>

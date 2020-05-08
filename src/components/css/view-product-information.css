@@ -45,3 +45,13 @@
     font-weight: 600;
     margin-bottom: 10px;
 }
+
+.product-information-text-detail{
+    color: #666;
+    margin: 10px 0;
+}
+
+.product-information-price{
+    font-size: 25px;
+    color:red
+}
