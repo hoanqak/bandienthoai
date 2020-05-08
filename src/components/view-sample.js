@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { render } from '@testing-library/react';
 import './css/view-sample.css';
 import imgMacbook from './images/macbookpro.jpg'; 
-const BoxDetail = (props) =>{
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-    return <div className='box'>
+const BoxDetail = (props) =>{
+    return <Link to={'product-information/' + props.name + '/' + props.productID} className='box' onClick={props.onClick}>
         <span className='discount-percent'>{props.discountPercent}</span>
         <img src={imgMacbook}/>
         <div className='detail'>
@@ -12,18 +13,21 @@ const BoxDetail = (props) =>{
             <div className='discount'>Price: {props.price}</div>
             <div className='price'>Discount: {props.discount}</div>
         </div>
-    </div>
-
+    </Link>
 }
 
 class ViewSample extends Component{
 
+    // sendProduct =(productID) =>{
+    //     this.props.callGetInformation(productID)
+    // }
+
     render(){
-        return <BoxDetail 
+        return <BoxDetail
         price={this.props.price}
         discountPercent={this.props.discountPercent}
         discount={this.props.discount}
-        name={this.props.name}/>
+        name={this.props.name} productID={ this.props.productID}/>
     }
 }
 
