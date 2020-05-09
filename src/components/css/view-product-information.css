@@ -52,6 +52,7 @@
 }
 
 .product-information-price{
-    font-size: 25px;
-    color:red
+    font-size: 30px;
+    color: red;
+    font-weight: 700;
 }

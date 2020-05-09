@@ -42,6 +42,10 @@ class ViewProductInformation extends React.Component{
         let { productInformation } = this.state;
         let { product }= this.state;
         let information = null;
+        var formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+          });
         if(product != null && productInformation != null){
             information = <div>
                 <div className='top'>
@@ -58,7 +62,7 @@ class ViewProductInformation extends React.Component{
                     </div>
                     <div className='box-product-information'>
                         <div className='product-information-product-name'>{product.productName}</div>
-                        <div className='product-information-price'>{ product.price }</div>
+                        <div className='product-information-price'>{formatter.format(product.price) }</div>
                         <div className='product-information-text-detail'>Sort desctip</div>
                         <div className='product-information-text-detail'>CPU: { productInformation.cpu }</div>
                         <div className='product-information-text-detail'>RAM: { productInformation.ram }</div>
@@ -67,6 +71,8 @@ class ViewProductInformation extends React.Component{
                         <div className='product-information-text-detail'>Operation System: { productInformation.operationSystem }</div>
                         <div className='product-information-text-detail'>Storage: { productInformation.storage }</div>
                     </div>
+                </div>
+                <div className='bottom'>
                 </div>
             </div>
         }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import './css/index.css';
@@ -17,16 +17,10 @@ import ModalCustom from './modal-custom';
 import contains from './config/contains';
 import ViewProductInformation from './view-product-information';
 
-const Item = (props) =>{
-    return <div className='item'>
-        {props.itemName}
-        <div className='detail-item'>
-            <div>Macbook</div>
-            <div>ASUS</div>
-            <div>DELL</div>
-        </div>
-    </div>
-}
+import AdminIndex from './admin/admin-index';
+import ListProduct from './list-product';
+import ListCategory from './list-category';
+
 
 const Header = () =>{
     return <div className='header'>
@@ -62,9 +56,7 @@ class Index  extends React.Component {
                 img3: 'img2'
             },
             imageActivate: 1,
-            page: 1,
-            open: false,
-            viewMode: contains.viewMode.HOME
+            page: 1
         };
         // setInterval(()=>{
         //     let count = this.state.imageActivate;
@@ -148,17 +140,6 @@ class Index  extends React.Component {
         return 'dot';
     }
 
-    componentDidMount(){
-        fetch(`${ config.BASE_URL }/api/v1/categories`).then(res => res.json()).then((result) => {
-            try{
-                this.setState({categories: result.data.categories})
-            }catch(e){
-                console.log(e)
-            }
-            })
-        this.loadDataProduct();
-    }
-
     onSubmit = () =>{
 
         let formData= new FormData();
@@ -180,51 +161,28 @@ class Index  extends React.Component {
         });
     }
 
-    loadDataProduct = async () =>{
-        fetch(`${ config.BASE_URL }/api/v1/products?page=${ this.state.page }`).then(res => res.json()).then((result) => {
-            if(result != null && result.data != null) this.setState({products : result.data.products, totalPage: result.data.totalPage})
-        })
-    }
-
     callbackFunction = async (page) => {
         this.setPage(page);
-        this.loadDataProduct();
     }
 
     setPage = (page) =>{
-        this.setState({ page: page })
+        this.setState({ page: page})
     }
 
-    closePopup = () => {
-        this.setState({open: false}); 
-    }
-
-    openPopup = () =>{
-        this.setState({open: true}); 
+    sendTotalPage = (totalPage) => {
+        this.setState({totalPage: totalPage })
     }
 
     render(){
         let content;
-            let img = imgNew;
-            let componentListProduct;
-            console.log(this.state.products)
-            if(this.state.products != null){
-                componentListProduct = this.state.products.map((product, key) =>
-                <ViewSample name={product.productName} productID={product.id} discount={product.price} key={key} price={product.price - ((product.discountPercent / 100) * product.price)} discountPercent={product.discountPercent +'%'}></ViewSample>
-                )
-            }
-            let listCategoriesComponent;
-            let { categories } = this.state;
-            if(categories != null) {
-                listCategoriesComponent = categories.map((cate, key) => <Item itemName={cate.categoryName} key={key}/>)
-            }
+            // let img = imgNew;
             content = <div>
                         <div className='content'>
                             <div className='left'>
-                                {listCategoriesComponent}
+                                <ListCategory/>
                             </div>
                             <div className='right'>
-                                <div className={this.state.news.img1}>
+                                {/* <div className={this.state.news.img1}>
                                     <News image={img}></News>
                                 </div>
                                 <div className={this.state.news.img2}>
@@ -237,11 +195,11 @@ class Index  extends React.Component {
                                     <span className={this.state.dot1} onClick={this.getCategories}></span>
                                     <span className={this.state.dot2} onClick={this.chooseTow}></span>
                                     <span className={this.state.dot3} onClick={this.chooseThree}></span>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className='list-item'>
-                            {componentListProduct}
+                            <ListProduct sendTotalPage={ this.sendTotalPage } page={this.state.page}></ListProduct>
                         </div>
                         <Paging totalPage={this.state.totalPage} parentCallback={this.callbackFunction} pageActivate={this.state.page}></Paging>
                     </div>
@@ -254,11 +212,10 @@ class Index  extends React.Component {
                         </Route>
                         <Route path="/product-information/:name/:id" component={ViewProductInformation}>
                         </Route>
+                        <Route path='/admin' component={AdminIndex}></Route>
                     </Router>
                     </div>
-                    <Footer>
-                    HIHHI
-                    </Footer>
+                    <Footer/>
                     <ModalCustom isOpen={ this.state.open } callClosePopup={ this.closePopup }></ModalCustom>
                 </div>
     }

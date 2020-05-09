@@ -10,8 +10,8 @@ const BoxDetail = (props) =>{
         <img src={imgMacbook}/>
         <div className='detail'>
             <div className='name'>{props.name}</div>
-            <div className='discount'>Price: {props.price}</div>
-            <div className='price'>Discount: {props.discount}</div>
+            <div className='price-after-discount'>Price: {props.priceAfterDiscount}</div>
+            <div className='price'>Discount: {props.price}</div>
         </div>
     </Link>
 }
@@ -27,7 +27,7 @@ class ViewSample extends Component{
         price={this.props.price}
         discountPercent={this.props.discountPercent}
         discount={this.props.discount}
-        name={this.props.name} productID={ this.props.productID}/>
+        name={this.props.name} productID={ this.props.productID} priceAfterDiscount={ this.props.priceAfterDiscount }/>
     }
 }
 

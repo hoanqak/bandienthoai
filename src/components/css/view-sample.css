@@ -13,6 +13,8 @@
     cursor: pointer;
     overflow: hidden;
     transition: 0.5s;
+    text-decoration: none;
+    color: #666
 }
 
 .box img {
@@ -25,7 +27,7 @@
     font-size: 14px;
 }
 
-.discount{
+.price-after-discount{
     font-weight: 600;
 }
 
