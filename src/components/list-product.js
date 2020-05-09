@@ -14,7 +14,8 @@ class ListProduct extends React.Component{
     }
 
     loadDataProduct = () =>{
-        fetch(`${ config.BASE_URL }/api/v1/products?page=${ this.props.page }`).then(res => res.json()).then((result) => {
+        console.log("Search: " + this.props.searchName)
+        fetch(`${ config.BASE_URL }/api/v1/products?page=${ this.props.page }&name=${ this.props.searchName }`).then(res => res.json()).then((result) => {
             if(result != null && result.data != null) 
             {
                 this.setState({products : result.data.products, totalPage: result.data.totalPage})
@@ -28,8 +29,7 @@ class ListProduct extends React.Component{
     }
 
     componentDidUpdate(prevProps){
-        console.log("UPdate")
-        if(prevProps.page != this.props.page){
+        if(prevProps.page !== this.props.page || prevProps.searchName !== this.props.searchName){
             this.loadDataProduct();
         }
     }

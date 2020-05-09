@@ -3,18 +3,18 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import './css/index.css';
 import logo from './images/images.png';
-import ViewSample from './view-sample';
-import News from './news';
-import imgNew from './images/macbookpro.jpg';
+// import ViewSample from './view-sample';
+// import News from './news';
+// import imgNew from './images/macbookpro.jpg';
 
-import dell from './images/dell.jpg';
-import acer from './images/acer.jpg';
+// import dell from './images/dell.jpg';
+// import acer from './images/acer.jpg';
 
 import config from './config/config'
 import Paging from './paging';
 
 import ModalCustom from './modal-custom';
-import contains from './config/contains';
+// import contains from './config/contains';
 import ViewProductInformation from './view-product-information';
 
 import AdminIndex from './admin/admin-index';
@@ -22,13 +22,13 @@ import ListProduct from './list-product';
 import ListCategory from './list-category';
 
 
-const Header = () =>{
+const Header = (props) =>{
     return <div className='header'>
         <img className='img-logo' src={logo}/>
         <div className='search'>
             <div className='box-search'>
-                <input type='text' placeholder='Search'></input>
-                <i className="fa fa-search icon"></i>
+                <input type='text' id='searchName' placeholder='Search'></input>
+                <i className="fa fa-search icon" onClick={ props.onClick }></i>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@ class Index  extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            img: imgNew,
+            // img: imgNew,
             dot1: this.activate(),
             dot2: this.noActivate(),
             dot3: this.noActivate(),
@@ -56,7 +56,8 @@ class Index  extends React.Component {
                 img3: 'img2'
             },
             imageActivate: 1,
-            page: 1
+            page: 1,
+            searchName: ''
         };
         // setInterval(()=>{
         //     let count = this.state.imageActivate;
@@ -132,6 +133,11 @@ class Index  extends React.Component {
         }
     }
 
+    searchName = () =>{
+        let contentSearch = document.getElementById('searchName').value;
+        this.setState({searchName: contentSearch});
+    }
+
     activate(){
         return 'dot activate';
     }
@@ -176,6 +182,7 @@ class Index  extends React.Component {
     render(){
         let content;
             // let img = imgNew;
+            console.log(this.state.searchName);
             content = <div>
                         <div className='content'>
                             <div className='left'>
@@ -199,12 +206,12 @@ class Index  extends React.Component {
                             </div>
                         </div>
                         <div className='list-item'>
-                            <ListProduct sendTotalPage={ this.sendTotalPage } page={this.state.page}></ListProduct>
+                            <ListProduct sendTotalPage={ this.sendTotalPage } page={this.state.page} searchName={ this.state.searchName }></ListProduct>
                         </div>
                         <Paging totalPage={this.state.totalPage} parentCallback={this.callbackFunction} pageActivate={this.state.page}></Paging>
                     </div>
         return  <div>
-                    <Header/>
+                    <Header onClick={ () =>this.searchName() }/>
                     <div className='component'>
                     <Router>
                         <Route exact path='/'>
